@@ -1,4 +1,4 @@
-import 'User.dart';
+import 'UserSQL.dart';
 
 class Message{
   String ConversationID;

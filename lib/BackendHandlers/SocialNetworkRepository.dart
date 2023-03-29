@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:socialnetworkplatform/BackendHandlers/WebAPIRequest/MemoryRequest.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/LogUserResponse.dart';
+import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/MemoryResponse.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
-import 'package:socialnetworkplatform/Models/User.dart';
+import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
 import 'WebAPIResponses/GetPostsForUserResponse.dart';
 import 'WebAPIResponses/InsertUserResponse.dart';
@@ -11,16 +13,32 @@ import 'WebAPIResponses/InsertUserResponse.dart';
 class SocialNetworkRepository{
 
   Map<String,String> _endpointPaths = {
+    'GetUsers':'/users/all',
     'LogUser':'/users/logUser',
     'InsertUser':'/users/insertUser',
     'DeleteUser':'/users/deleteUser',
-    'GetPostsForUser':'/posts/getPostsForUser'
+    'GetData':'/memory/getData'
   };
   String _serviceUrl;
   SocialNetworkRepository(String url){
     _serviceUrl = url;
   }
 
+  Future<List<UserSQL>> GetUsers() async{
+    try{
+      var uri = Uri.https(_serviceUrl, _endpointPaths['GetUsers']);
+      print(uri);
+      final response = await http.get(uri);
+      print(response);
+      print(response.body);
+      var data = json.decode(response.body);
+      var result = new LogUserResponse.fromJson(data);
+
+      return null;
+    }catch(e){
+
+    }
+  }
   Future<LogUserResponse> ValidateUser(String email, String password) async {
     try {
       final queryParams = {
@@ -74,24 +92,26 @@ class SocialNetworkRepository{
     }
     return item;
   }
-  Future<GetPostsForUserResponse> GetPostsForUser(String userId) async{
+  Future<MemoryResponse> GetDataForUser(String session, bool includeUsers, bool includePosts, bool includeLikes, bool includeFriends) async{
     try {
-      final queryParams = {
-        'userId':userId,
-      };
+      var request = new MemoryRequest(includeUsers, includePosts, includeLikes, includeFriends, session);
 
-      var uri = Uri.https(_serviceUrl, _endpointPaths['GetPostsForUser'],queryParams);
+      var uri = Uri.https(_serviceUrl, _endpointPaths['GetData']);
       print(uri);
-      final response = await http.get(uri);
+      var body = json.encode(request.toJson(),toEncodable: myEncode);
+      final response = await http.post(uri,
+          headers: {"Content-Type": "application/json"},
+          body: body
+      );
       print(response);
       print(response.body);
       var data = json.decode(response.body);
-      var result = new GetPostsForUserResponse.fromJson(data);
+      var result = new MemoryResponse.fromJson(data);
 
       return result;
     } catch(e){
       print(e);
-      var r = new GetPostsForUserResponse(false);
+      var r = new MemoryResponse(Success: false);
       return r;
     }
   }

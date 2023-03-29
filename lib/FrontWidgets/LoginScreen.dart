@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,7 @@ import 'package:socialnetworkplatform/Models/Post.dart';
 import '../Cache.dart';
 import 'RegisterScreen.dart';
 import 'MainScreen.dart';
-import '../Models/User.dart';
+import '../Models/UserSQL.dart';
 import '../Singleton.dart';
 import '../BackendHandlers/WebAPIResponses/LogUserResponse.dart';
 
@@ -119,7 +120,8 @@ class LoginScreen extends StatelessWidget {
                             response = await Singleton.socialNetworkRepo.ValidateUser(email, password),
                             if(response.Success){
                               Cache.LoggedUser = response.LoggedUser,
-                              await GetUserData(response.LoggedUser),
+                              Cache.Session = response.Session,
+                              await GetUserData(),
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => MaterialApp(
@@ -169,11 +171,13 @@ class LoginScreen extends StatelessWidget {
             )
         );
   }
-  void GetUserData(UserSQL userinfo) async {
-    //Cache.LoggedUser = new User()
-      //var responsePosts = await Singleton.socialNetworkRepo.GetPostsForUser(userinfo.UserID);
-      //var responseFriends = await Singleton.socialNetworkRepo.GetFriendsForUser(Cache.LoggedUser.UserID);
-      //var responseFriends = await Singleton.socialNetworkRepo.GetNotificationsForUser(Cache.LoggedUser.UserID);
+  void GetUserData() async {
+      var response = await Singleton.socialNetworkRepo.GetDataForUser(Cache.Session,true,true,true,true);
+      print(Cache);
+      Cache.Users = response.Users;
+      Cache.Posts = response.Posts;
+      Cache.Friends = response.Friends;
+      Cache.Likes = response.Likes;
   }
 }
 

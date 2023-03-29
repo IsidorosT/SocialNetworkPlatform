@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Models/User.dart';
+import '../../Models/UserSQL.dart';
 class ProfileComponent extends StatelessWidget {
 
   UserSQL SelectedUser;

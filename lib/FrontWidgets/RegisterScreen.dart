@@ -3,7 +3,7 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:socialnetworkplatform/Models/User.dart';
+import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
 import '../Singleton.dart';
 import 'LoginScreen.dart';

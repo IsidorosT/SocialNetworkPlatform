@@ -1,4 +1,4 @@
-import '../Models/User.dart';
+import '../Models/UserSQL.dart';
 
 class Conversation{
   String ConversationID;

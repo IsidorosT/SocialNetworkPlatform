@@ -3,6 +3,8 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socialnetworkplatform/FrontWidgets/Components/PostComponent.dart';
+import 'package:socialnetworkplatform/Models/Like.dart';
+import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
 import '../../Cache.dart';
 import '../../Models/Post.dart';
@@ -18,9 +20,13 @@ class PostComponent extends StatefulWidget {
 }
 
 class _PostComponentState extends State<PostComponent> {
+  UserSQL UserPost;
   Post PostDetails;
+  List<Like> Likes;
   _PostComponentState(Post postDetails){
     PostDetails = postDetails;
+    UserPost = Cache.Users.where((element) => element.UserID == PostDetails.UserID).single;
+    Likes = Cache.Likes.where((element) => element.PostID == PostDetails.PostID).toList();
   }
 
   @override
@@ -47,7 +53,7 @@ class _PostComponentState extends State<PostComponent> {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                      PostDetails.UserPost.ProfilePicUrl
+                      UserPost.ProfilePicUrl
                   ),
                 ),
                 Expanded(
@@ -60,7 +66,7 @@ class _PostComponentState extends State<PostComponent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            PostDetails.UserPost.FullName,
+                            UserPost.FullName,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                             )
@@ -69,7 +75,7 @@ class _PostComponentState extends State<PostComponent> {
                     ),
                   )
                 ),
-                Cache.LoggedUser.UserID == PostDetails.UserPost.UserID ?
+                Cache.LoggedUser.UserID == UserPost.UserID ?
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -130,19 +136,22 @@ class _PostComponentState extends State<PostComponent> {
               IconButton(
                 onPressed: () {
                   setState(() {
-                    if(PostDetails.Liked.any((i) => i.UserID == Cache.LoggedUser.UserID)){
-                      PostDetails.Liked = PostDetails.Liked.where((i) => i.UserID != Cache.LoggedUser.UserID).toList();
+                    if(Likes.any((i) => i.UserID == Cache.LoggedUser.UserID)){
+                      Likes = Likes.where((i) => i.UserID != Cache.LoggedUser.UserID).toList();
                     }
                     else{
-                      PostDetails.Liked.add(Cache.LoggedUser);
+                      var like = new Like();
+                      like.UserID = Cache.LoggedUser.UserID;
+                      like.PostID = PostDetails.PostID;
+                      Likes.add(like);
                     }
                   });
                 },
-                icon: PostDetails.Liked.any((i) => i.UserID == Cache.LoggedUser.UserID)
+                icon: Likes.any((i) => i.UserID == Cache.LoggedUser.UserID)
                     ? Icon(Icons.favorite,color: Colors.red)
                     : Icon(Icons.favorite_border,color: Colors.grey,)
               ),
-              Text(PostDetails.Liked.length.toString())
+              Text(Likes.length.toString())
               //*Comment not for now
               /*
               IconButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/User.dart';
+import '../Models/UserSQL.dart';
 import 'Components/ProfileComponent.dart';
 
 class SearchTab extends StatefulWidget {

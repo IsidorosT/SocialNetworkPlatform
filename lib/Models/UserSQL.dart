@@ -15,11 +15,11 @@ class UserSQL {
   UserSQL(this.UserID,this.Name,this.Surname,this.DateOfBirth,this.Email,this.Password,this.Bio, this.ProfilePicUrl){
     FullName = Name + " " + Surname;
   }
-  UserSQL.fromjson(Map<String,dynamic> json){
+  UserSQL.fromJson(Map<String,dynamic> json){
     UserID = json['userID'];
     Name = json['name'];
     Surname = json['surname'];
-    FullName = json['fullName'];
+    FullName = Name + Surname;
     DateOfBirth = DateTime.parse(json['dateOfBirth']);
     Email = json['email'];
     Password = json['password'];

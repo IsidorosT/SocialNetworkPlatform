@@ -1,8 +1,18 @@
-import '../Models/User.dart';
+import 'dart:convert';
+
+import '../Models/UserSQL.dart';
 
 class Post{
-  UserSQL UserPost;
+  String UserID;
+  String PostID;
   String PostPicUrl;
-  List<UserSQL> Liked;
-  Post({this.UserPost,this.PostPicUrl,this.Liked});
+  String Description;
+  Post();
+  Post.fromJson(Map<String, dynamic> jsonstring) {
+    UserID = jsonstring['userID'];
+    PostID = jsonstring['postID'];
+    PostPicUrl = jsonstring['postPicUrl'];
+    Description = jsonstring['description'];
+  }
+
 }
