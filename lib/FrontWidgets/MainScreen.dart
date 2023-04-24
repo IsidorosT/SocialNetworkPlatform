@@ -26,20 +26,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
       HomeTab(
           Cache.Posts
       ),
-      MessageTab([
-        new Conversation(
-            ConversationID: "1",
-            LastMessage: "Hey bro",
-            isUnread : true,
-            RecipientUser: new UserSQL("3", "Ernesto", "Valverde", new DateTime(1),"t","sss","dsfsfd","https://i0.wp.com/newspack-washingtoncitypaper.s3.amazonaws.com/uploads/2009/04/contexts.org_socimages_files_2009_04_d_silhouette.png?fit=1200%2C756&ssl=1")
-        ),
-        new Conversation(
-            ConversationID: "2",
-            LastMessage: "MANNNSD SJDEWJHFKSDHFKJH DSKJFHKDSJHFKJDSHFKJSDFHJKSSDJFHKJSDHFKSDHFJKHSDFKJSDHFK",
-            isUnread : false,
-            RecipientUser: new UserSQL("4", "Orestis", "Asimakopoulos", new DateTime(1),"t","sss","dsfsfd","https://i0.wp.com/newspack-washingtoncitypaper.s3.amazonaws.com/uploads/2009/04/contexts.org_socimages_files_2009_04_d_silhouette.png?fit=1200%2C756&ssl=1")
-        ),
-      ]),
+      MessageTab(
+        Cache.Conversations
+      ),
       const NotificationsTab(),
       SearchTab(
           Cache.Users

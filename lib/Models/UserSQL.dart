@@ -19,7 +19,7 @@ class UserSQL {
     UserID = json['userID'];
     Name = json['name'];
     Surname = json['surname'];
-    FullName = Name + Surname;
+    FullName = Name + " " + Surname;
     DateOfBirth = DateTime.parse(json['dateOfBirth']);
     Email = json['email'];
     Password = json['password'];

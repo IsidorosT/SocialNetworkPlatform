@@ -172,12 +172,14 @@ class LoginScreen extends StatelessWidget {
         );
   }
   void GetUserData() async {
-      var response = await Singleton.socialNetworkRepo.GetDataForUser(Cache.Session,true,true,true,true);
+      var response = await Singleton.socialNetworkRepo.GetDataForUser(Cache.Session,Cache.LoggedUser.UserID,true,true,true,true,true,true);
       print(Cache);
       Cache.Users = response.Users;
       Cache.Posts = response.Posts;
       Cache.Friends = response.Friends;
       Cache.Likes = response.Likes;
+      Cache.Conversations = response.Conversations;
+      Cache.Messages = response.Messages;
   }
 }
 

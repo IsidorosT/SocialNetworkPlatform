@@ -92,9 +92,25 @@ class SocialNetworkRepository{
     }
     return item;
   }
-  Future<MemoryResponse> GetDataForUser(String session, bool includeUsers, bool includePosts, bool includeLikes, bool includeFriends) async{
+  Future<MemoryResponse> GetDataForUser(
+      String session,
+      String userID,
+      bool includeUsers,
+      bool includePosts,
+      bool includeLikes,
+      bool includeFriends,
+      bool includeMessages,
+      bool includeConversations) async{
     try {
-      var request = new MemoryRequest(includeUsers, includePosts, includeLikes, includeFriends, session);
+      var request = new MemoryRequest(
+          includeUsers,
+          includePosts,
+          includeLikes,
+          includeFriends,
+          includeMessages,
+          includeConversations,
+          session,
+          userID);
 
       var uri = Uri.https(_serviceUrl, _endpointPaths['GetData']);
       print(uri);

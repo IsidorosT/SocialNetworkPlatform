@@ -10,25 +10,11 @@ import 'ConversationComponent.dart';
 
 class MessageComponent extends StatelessWidget {
   Conversation Chat;
+  String LastMessage;
   MessageComponent(Conversation chat){
     Chat = chat;
-    messagesEx = [
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "Yeah let's go tommorow", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "We were unlucky", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "I have arrived but the bar is closed. Where are you ? Do you want to cancel it and come again tomorrow when even Eve will be here!", MessageCreator: Cache.LoggedUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "Sure man i will be there at 8 o clock", MessageCreator: Cache.LoggedUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "Will you join us tonight for drinks?", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "hey", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "hey", MessageCreator: Cache.LoggedUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "hey", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "hey", MessageCreator: Cache.LoggedUser,Timestamp: "Now1"),
-      new Message(ConversationID: Chat.ConversationID,MessageContent: "hey", MessageCreator: Chat.RecipientUser,Timestamp: "Now1"),
-
-
-
-
-
-    ];
+    messagesEx = Cache.Messages.where((x) => x.ConversationID == Chat.ConversationID).toList();
+    LastMessage = messagesEx.elementAt(messagesEx.length-1).MessageContent;
   }
 
   List<Message> messagesEx;
@@ -67,7 +53,7 @@ class MessageComponent extends StatelessWidget {
                   CircleAvatar(
                     radius: 16,
                     backgroundImage: NetworkImage(
-                        Chat.RecipientUser.ProfilePicUrl
+                        Cache.Users.where((x) => (x.UserID == Chat.UserIDB || x.UserID == Chat.UserIDB) && x.UserID != Cache.LoggedUser.UserID).elementAt(0).ProfilePicUrl
                     ),
                   ),
                   Container(
@@ -85,7 +71,7 @@ class MessageComponent extends StatelessWidget {
                                   overflow: TextOverflow.fade,
                                   strutStyle: StrutStyle(fontSize: 12.0),
                                   text: TextSpan(
-                                    text: Chat.LastMessage.length <= 20 ? Chat.LastMessage : Chat.LastMessage.substring(0,20)+"...",
+                                    text: LastMessage.length <= 20 ? LastMessage : LastMessage.substring(0,20)+"...",
                                     style: TextStyle(
                                     fontWeight: Chat.isUnread ? FontWeight.bold : FontWeight.normal,
                                     )

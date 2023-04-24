@@ -30,6 +30,7 @@ class _ConversationComponentState extends State<ConversationComponent> {
   ScrollController _controller;
   _ConversationComponentState(Conversation chat,List<Message> messages){
     Chat = chat;
+    messages.sort((a,b) => a.SendDate.compareTo(b.SendDate));
     Messages = messages;
   }
 
@@ -57,7 +58,7 @@ class _ConversationComponentState extends State<ConversationComponent> {
                 )
               },
             ),
-            Text(Chat.RecipientUser.FullName)
+            Text(Cache.Users.where((x) => (x.UserID == Chat.UserIDA || x.UserID == Chat.UserIDB) && x.UserID != Cache.LoggedUser.UserID).elementAt(0).FullName)
           ],
         ),
       ),
@@ -78,12 +79,12 @@ class _ConversationComponentState extends State<ConversationComponent> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: Messages.length,
-                        reverse: true,
+                        reverse: false,
                         itemBuilder: (context, index) {
                           var result = Messages[index];
-                          return result.MessageCreator.UserID == Cache.LoggedUser.UserID
-                          ? MessageOwnTile( MessageContent: result.MessageContent, MessageDate: result.Timestamp)
-                          : MessageTile(MessageContent: result.MessageContent, MessageDate: result.Timestamp);
+                          return result.Sender == Cache.LoggedUser.UserID
+                          ? MessageOwnTile( MessageContent: result.MessageContent, MessageDate: result.SendDate.toString())
+                          : MessageTile(MessageContent: result.MessageContent, MessageDate: result.SendDate.toString());
                         },
                       )
                     ],

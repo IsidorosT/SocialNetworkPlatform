@@ -2,8 +2,14 @@ import '../Models/UserSQL.dart';
 
 class Conversation{
   String ConversationID;
-  String LastMessage;
+  String UserIDA;
+  String UserIDB;
   bool isUnread;
-  UserSQL RecipientUser;
-  Conversation({this.ConversationID,this.LastMessage,this.isUnread,this.RecipientUser});
+  Conversation({this.ConversationID,this.UserIDA,this.UserIDB,this.isUnread});
+  Conversation.fromJson(Map<String, dynamic> json) {
+    ConversationID = json['conversationID'];
+    UserIDA = json['userIDA'];
+    UserIDB = json['userIDB'];
+    isUnread = json['isUnread'];
+  }
 }

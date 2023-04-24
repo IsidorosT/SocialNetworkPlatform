@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../Cache.dart';
 import '../../Models/UserSQL.dart';
 class ProfileComponent extends StatelessWidget {
 
@@ -55,7 +56,11 @@ class ProfileComponent extends StatelessWidget {
                         ),
                       )
                   ),
-                  Icon(Icons.person)
+                  Icon(
+                      Cache.Friends.any((element) => element.UserID == Cache.LoggedUser.UserID && element.FriendUserID == SelectedUser.UserID)
+                          ? Icons.person
+                          : Icons.add
+                  )
                 ],
               ),
             ),
