@@ -1,10 +1,12 @@
 import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guid/flutter_guid.dart';
 import 'package:socialnetworkplatform/Models/Conversation.dart';
 import '../Cache.dart';
 import '../Models/Post.dart';
 import '../Models/UserSQL.dart';
+import '../Singleton.dart';
 import 'HomeTab.dart';
 import 'LoginScreen.dart';
 import 'MessageTab.dart';
@@ -69,6 +71,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
   ];
 
   List<Widget> TabViews;
+  Post newPost = new Post();
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,90 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
         body: TabBarView(
           controller: _tabController,
           children: TabViews
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MaterialApp(
+                        home: Scaffold(
+                          body: Column(
+                            children: [
+                              Text("Add new Post"),
+                              Row(
+                                children: [
+                                  Text("Photo"),
+                                  SizedBox(
+                                    width: 200,
+                                    height: 60,
+                                    child: TextField(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText: 'Web destination of the photo',
+                                        ),
+                                        onChanged: (newValue){
+                                          newPost.PostPicUrl = newValue;
+                                        }
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Description"),
+                                  SizedBox(
+                                    width: 200,
+                                    height: 60,
+                                    child: TextField(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          hintText: 'Enter your post Description',
+                                        ),
+                                        onChanged: (newValue){
+                                          newPost.Description = newValue;
+                                        }
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    child: const Text('Create'),
+                                    onPressed: () async {
+                                      newPost.UserID = Cache.LoggedUser.UserID;
+                                      newPost.PostID = Guid.newGuid.toString();
+                                      newPost.PostID = await Singleton.socialNetworkRepo.AddPost(newPost);
+                                      setState(() {
+                                        Cache.Posts.add(newPost);
+                                        Navigator.of(context).pop();
+                                      });
+                                    },
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    child: const Text('Discard'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                    )
+                ),
+              );
+          },
+          child: const Icon(Icons.add),
+        ),
     );
   }
 }

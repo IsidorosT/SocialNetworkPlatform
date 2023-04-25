@@ -7,4 +7,8 @@ class Like {
     PostID = json['postID'];
     UserID = json['userID'];
   }
+  Map toJson() => {
+    'UserID': UserID,
+    'PostID': PostID
+  };
 }

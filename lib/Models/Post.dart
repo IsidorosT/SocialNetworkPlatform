@@ -14,5 +14,10 @@ class Post{
     PostPicUrl = jsonstring['postPicUrl'];
     Description = jsonstring['description'];
   }
-
+  Map toJson() => {
+    'UserID': UserID,
+    'PostID': PostID,
+    'PostPicUrl': PostPicUrl,
+    'Description': Description
+  };
 }

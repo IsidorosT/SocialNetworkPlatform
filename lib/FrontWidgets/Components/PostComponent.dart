@@ -8,6 +8,7 @@ import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
 import '../../Cache.dart';
 import '../../Models/Post.dart';
+import '../../Singleton.dart';
 
 class PostComponent extends StatefulWidget {
   Post PostDetails;
@@ -136,14 +137,17 @@ class _PostComponentState extends State<PostComponent> {
               IconButton(
                 onPressed: () {
                   setState(() {
+                    var like = new Like();
+                    like.UserID = Cache.LoggedUser.UserID;
+                    like.PostID = PostDetails.PostID;
                     if(Likes.any((i) => i.UserID == Cache.LoggedUser.UserID)){
+                      Singleton.socialNetworkRepo.RemoveLike(like);
                       Likes = Likes.where((i) => i.UserID != Cache.LoggedUser.UserID).toList();
                     }
                     else{
-                      var like = new Like();
-                      like.UserID = Cache.LoggedUser.UserID;
-                      like.PostID = PostDetails.PostID;
+                      Singleton.socialNetworkRepo.AddLike(like);
                       Likes.add(like);
+
                     }
                   });
                 },
@@ -161,6 +165,11 @@ class _PostComponentState extends State<PostComponent> {
               
                */
             ],
+          ),
+          Row(
+              children: [
+                Text(PostDetails.Description)
+              ]
           )
         ],
       )
