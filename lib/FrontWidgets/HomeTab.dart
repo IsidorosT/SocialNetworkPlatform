@@ -21,6 +21,8 @@ class HomeTab extends StatelessWidget {
             itemCount: Posts.length,
             itemBuilder: (context, index) {
               var result = Posts[index];
+              print(result.PostID);
+              print(result.PostPicUrl);
               return PostComponent(result);
             },
           )

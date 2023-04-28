@@ -9,6 +9,10 @@ import 'package:socialnetworkplatform/Models/UserSQL.dart';
 import '../../Cache.dart';
 import '../../Models/Post.dart';
 import '../../Singleton.dart';
+import '../HomeTab.dart';
+import '../MessageTab.dart';
+import '../NotificationsTab.dart';
+import '../SearchTab.dart';
 
 class PostComponent extends StatefulWidget {
   Post PostDetails;
@@ -78,8 +82,8 @@ class _PostComponentState extends State<PostComponent> {
                 ),
                 Cache.LoggedUser.UserID == UserPost.UserID ?
                 IconButton(
-                  onPressed: () {
-                    showDialog(
+                  onPressed: () async{
+                    await showDialog(
                       useRootNavigator: false,
                       context: context,
                       builder: (context) {
@@ -100,14 +104,15 @@ class _PostComponentState extends State<PostComponent> {
                                           horizontal: 16),
                                       child: Text(e),
                                     ),
-                                    onTap: () {
-                                      /*deletePost(
-                                        widget.snap['postId']
-                                            .toString(),
-                                      );
+                                    onTap: () async {
+                                      Cache.Posts.remove(PostDetails);
+                                      await Singleton.socialNetworkRepo.DeletePost(PostDetails);
 
-                                       */
-                                      // remove the dialog box
+                                      Cache.MainScreenState.setState(() {
+                                        Cache.MainScreenState.widget.TabViews[0] = HomeTab(
+                                              Cache.Posts
+                                          );
+                                      });
                                       Navigator.of(context).pop();
                                     }),
                               )

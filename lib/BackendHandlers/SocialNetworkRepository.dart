@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:socialnetworkplatform/BackendHandlers/WebAPIRequest/Credentials.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIRequest/MemoryRequest.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/LogUserResponse.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/MemoryResponse.dart';
@@ -8,6 +9,7 @@ import 'package:socialnetworkplatform/Models/Like.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
 import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
+import '../Cache.dart';
 import 'WebAPIResponses/GetPostsForUserResponse.dart';
 import 'WebAPIResponses/InsertUserResponse.dart';
 
@@ -21,7 +23,9 @@ class SocialNetworkRepository{
     'GetData':'/memory/getData',
     'AddLike':'/likes/add',
     'RemoveLike':'/likes/delete',
-    'AddPost':'/posts/add'
+    'AddPost':'/posts/add',
+    'DeletePost':'/posts/delete',
+    'GetUpdates':'/memory/getUpdates',
   };
   String _serviceUrl;
   SocialNetworkRepository(String url){
@@ -187,5 +191,49 @@ class SocialNetworkRepository{
     var result = data;
 
     return result;
+  }
+
+  Future<bool> DeletePost(Post post) async{
+
+    var uri = Uri.https(_serviceUrl, _endpointPaths['DeletePost']);
+    print(uri);
+    //encode Map to JSON
+    var body = json.encode(post.toJson(),toEncodable: myEncode);
+    final response = await http.delete(uri,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+    print(response);
+    print(response.body);
+    var data = json.decode(response.body);
+    var result = data;
+
+    return result;
+  }
+
+  Future<MemoryResponse> GetUpdates() async{
+    try {
+      var request = new Credentials(
+          Cache.Session,
+          Cache.LoggedUser.UserID);
+
+      var uri = Uri.https(_serviceUrl, _endpointPaths['GetUpdates']);
+      print(uri);
+      var body = json.encode(request.toJson(),toEncodable: myEncode);
+      final response = await http.post(uri,
+          headers: {"Content-Type": "application/json"},
+          body: body
+      );
+      print(response);
+      print(response.body);
+      var data = json.decode(response.body);
+      var result = new MemoryResponse.fromJson(data);
+
+      return result;
+    } catch(e){
+      print(e);
+      var r = new MemoryResponse(Success: false);
+      return r;
+    }
   }
 }
