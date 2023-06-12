@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:socialnetworkplatform/BackendHandlers/DbActions.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIRequest/Credentials.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIRequest/MemoryRequest.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/LogUserResponse.dart';
 import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/MemoryResponse.dart';
+import 'package:socialnetworkplatform/Models/Conversation.dart';
+import 'package:socialnetworkplatform/Models/Friend.dart';
 import 'package:socialnetworkplatform/Models/Like.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
 import 'package:socialnetworkplatform/Models/UserSQL.dart';
@@ -26,6 +29,10 @@ class SocialNetworkRepository{
     'AddPost':'/posts/add',
     'DeletePost':'/posts/delete',
     'GetUpdates':'/memory/getUpdates',
+    'AddFriend':'/friends/add',
+    'RemoveFriend':'/friends/delete',
+    'AddConversation':'/conversations/add',
+    'RemoveConversation':'/conversations/delete',
   };
   String _serviceUrl;
   SocialNetworkRepository(String url){
@@ -235,5 +242,67 @@ class SocialNetworkRepository{
       var r = new MemoryResponse(Success: false);
       return r;
     }
+  }
+
+  Future<bool> UpdateFriend(DbActions action, Friend friend) async {
+    String endpoint = action == DbActions.Add
+        ? _endpointPaths['AddFriend']
+        : _endpointPaths['RemoveFriend'];
+    var uri = Uri.https(_serviceUrl, endpoint);
+    print(uri);
+    //encode Map to JSON
+    var body = json.encode(friend.toJson(),toEncodable: myEncode);
+    final response = action == DbActions.Add
+        ? await http.post(uri,
+          headers: {"Content-Type": "application/json"},
+          body: body
+        )
+        : await http.delete(uri,
+            headers: {"Content-Type": "application/json"},
+            body: body
+        );
+    print(response);
+    print(response.body);
+    if(action == DbActions.Add){
+      Cache.Friends.add(friend);
+    }
+    else{
+      Cache.Friends = Cache.Friends.where((element) => (element.UserID == friend.UserID && element.FriendUserID == friend.FriendUserID)||(element.UserID == friend.FriendUserID && element.FriendUserID == friend.UserID)).toList();
+    }
+    var data = json.decode(response.body);
+    var result = data;
+
+    return result;
+  }
+
+  Future<bool> UpdateConversation(DbActions action, Conversation conversation) async {
+    String endpoint = action == DbActions.Add
+        ? _endpointPaths['AddConversation']
+        : _endpointPaths['RemoveConversation'];
+    var uri = Uri.https(_serviceUrl, endpoint);
+    print(uri);
+    //encode Map to JSON
+    var body = json.encode(conversation.toJson(),toEncodable: myEncode);
+    final response = await http.post(uri,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+    print(response);
+    print(response.body);
+    if(action == DbActions.Add){
+      if(response.body == ""){
+        return false;
+      }
+      conversation.ConversationID = response.body;
+      Cache.Conversations.add(conversation);
+      return true;
+    }
+    else{
+      Cache.Conversations.remove(conversation);
+    }
+    var data = json.decode(response.body);
+    var result = data;
+
+    return result;
   }
 }

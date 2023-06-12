@@ -7,4 +7,8 @@ class Friend{
     UserID = json['userID'];
     FriendUserID = json['friendUserID'];
   }
+  Map toJson() => {
+    'UserID': UserID,
+    'FriendUserID': FriendUserID
+  };
 }

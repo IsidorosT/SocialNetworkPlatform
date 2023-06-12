@@ -16,6 +16,5 @@ class ConversationBloc extends Bloc<ConversationEvent, List<Conversation>>
 class ConversationEvent {
   List<Conversation> newConversations;
   ConversationEvent(this.newConversations){
-
   }
 }

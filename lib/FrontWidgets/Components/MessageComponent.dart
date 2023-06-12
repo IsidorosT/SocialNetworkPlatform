@@ -73,6 +73,7 @@ class MessageComponent extends StatelessWidget {
                                   text: TextSpan(
                                     text: LastMessage.length <= 20 ? LastMessage : LastMessage.substring(0,20)+"...",
                                     style: TextStyle(
+                                      color: Colors.black,
                                     fontWeight: Chat.isUnread ? FontWeight.bold : FontWeight.normal,
                                     )
                                   )

@@ -14,7 +14,7 @@ class MessageTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     conversationBloc = BlocProvider.of<ConversationBloc>(context);
-    BlocBuilder<ConversationBloc, List<Conversation>>(
+    return BlocBuilder<ConversationBloc, List<Conversation>>(
         bloc: conversationBloc,
         builder: (context, state) {
           return SingleChildScrollView(

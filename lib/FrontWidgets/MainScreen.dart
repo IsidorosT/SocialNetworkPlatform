@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider(
+    return BlocProvider(
       create: (BuildContext context) => new ConversationBloc(Cache.Conversations),
       child: Scaffold(
         appBar: AppBar(

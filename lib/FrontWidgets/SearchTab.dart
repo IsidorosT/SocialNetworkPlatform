@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Cache.dart';
 import '../Models/UserSQL.dart';
 import 'Components/ProfileComponent.dart';
 
@@ -37,7 +38,7 @@ class _searchTabState extends State<SearchTab> {
               ),
               onChanged: (newText) => {
                 setState(() {
-                  SearchableUsers = Users.where((i) => i.FullName.contains(newText)).toList();
+                  SearchableUsers = Users.where((i) => i.FullName.contains(newText) && i.UserID != Cache.LoggedUser.UserID).toList();
                 })
                 },
             ),

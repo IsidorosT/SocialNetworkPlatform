@@ -12,4 +12,11 @@ class Conversation{
     UserIDB = json['userIDB'];
     isUnread = json['isUnread'];
   }
+
+  Map toJson() => {
+    'ConversationID': ConversationID,
+    'UserIDA': UserIDA,
+    'UserIDB': UserIDB,
+    'isUnread': isUnread,
+  };
 }
