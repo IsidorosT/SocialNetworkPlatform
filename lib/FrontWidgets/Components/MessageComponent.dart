@@ -14,7 +14,7 @@ class MessageComponent extends StatelessWidget {
   MessageComponent(Conversation chat){
     Chat = chat;
     messagesEx = Cache.Messages.where((x) => x.ConversationID == Chat.ConversationID).toList();
-    LastMessage = messagesEx.elementAt(messagesEx.length-1).MessageContent;
+    LastMessage = messagesEx.length > 0 ? messagesEx.elementAt(messagesEx.length-1).MessageContent : "";
   }
 
   List<Message> messagesEx;

@@ -282,7 +282,7 @@ class SocialNetworkRepository{
     var uri = Uri.https(_serviceUrl, endpoint);
     print(uri);
     //encode Map to JSON
-    var body = json.encode(conversation.toJson(),toEncodable: myEncode);
+    var body = json.encode(conversation.toJson(includeID: false),toEncodable: myEncode);
     final response = await http.post(uri,
         headers: {"Content-Type": "application/json"},
         body: body
@@ -295,6 +295,7 @@ class SocialNetworkRepository{
       }
       conversation.ConversationID = response.body;
       Cache.Conversations.add(conversation);
+      print(Cache.Conversations.length);
       return true;
     }
     else{

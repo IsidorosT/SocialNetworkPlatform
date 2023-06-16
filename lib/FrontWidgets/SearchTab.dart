@@ -25,7 +25,7 @@ class _searchTabState extends State<SearchTab> {
   @override
   void initState() {
     super.initState();
-    SearchableUsers = Users;
+    SearchableUsers = Users.where((i) => i.UserID != Cache.LoggedUser.UserID).toList();
   }
   @override
   Widget build(BuildContext context) {

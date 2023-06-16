@@ -13,10 +13,20 @@ class Conversation{
     isUnread = json['isUnread'];
   }
 
-  Map toJson() => {
-    'ConversationID': ConversationID,
-    'UserIDA': UserIDA,
-    'UserIDB': UserIDB,
-    'isUnread': isUnread,
-  };
+  Map toJson({bool includeID = true}) {
+    if(includeID){
+      return {
+        'ConversationID': ConversationID,
+        'UserIDA': UserIDA,
+        'UserIDB': UserIDB,
+        'isUnread': isUnread,
+      };
+    } else {
+      return {
+        'UserIDA': UserIDA,
+        'UserIDB': UserIDB,
+        'isUnread': isUnread,
+      };
+    }
+  }
 }
