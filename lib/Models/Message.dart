@@ -14,4 +14,12 @@ class Message{
     MessageContent = json['messageContent'];
     SendDate = DateTime.parse(json['sendDate']);
   }
+
+  Map toJson() => {
+    'MessageID': MessageID,
+    'ConversationID': ConversationID,
+    'Sender': Sender,
+    'MessageContent': MessageContent,
+    'SendDate': SendDate,
+  };
 }

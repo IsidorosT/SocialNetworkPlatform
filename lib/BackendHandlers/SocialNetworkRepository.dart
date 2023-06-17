@@ -9,6 +9,7 @@ import 'package:socialnetworkplatform/BackendHandlers/WebAPIResponses/MemoryResp
 import 'package:socialnetworkplatform/Models/Conversation.dart';
 import 'package:socialnetworkplatform/Models/Friend.dart';
 import 'package:socialnetworkplatform/Models/Like.dart';
+import 'package:socialnetworkplatform/Models/Message.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
 import 'package:socialnetworkplatform/Models/UserSQL.dart';
 
@@ -33,6 +34,7 @@ class SocialNetworkRepository{
     'RemoveFriend':'/friends/delete',
     'AddConversation':'/conversations/add',
     'RemoveConversation':'/conversations/delete',
+    'AddMessage':'/messages/add',
   };
   String _serviceUrl;
   SocialNetworkRepository(String url){
@@ -134,8 +136,6 @@ class SocialNetworkRepository{
           headers: {"Content-Type": "application/json"},
           body: body
       );
-      print(response);
-      print(response.body);
       var data = json.decode(response.body);
       var result = new MemoryResponse.fromJson(data);
 
@@ -225,15 +225,14 @@ class SocialNetworkRepository{
           Cache.LoggedUser.UserID);
 
       var uri = Uri.https(_serviceUrl, _endpointPaths['GetUpdates']);
-      print(uri);
       var body = json.encode(request.toJson(),toEncodable: myEncode);
       final response = await http.post(uri,
           headers: {"Content-Type": "application/json"},
           body: body
       );
-      print(response);
-      print(response.body);
+
       var data = json.decode(response.body);
+      print(data);
       var result = new MemoryResponse.fromJson(data);
 
       return result;
@@ -267,7 +266,7 @@ class SocialNetworkRepository{
       Cache.Friends.add(friend);
     }
     else{
-      Cache.Friends = Cache.Friends.where((element) => (element.UserID == friend.UserID && element.FriendUserID == friend.FriendUserID)||(element.UserID == friend.FriendUserID && element.FriendUserID == friend.UserID)).toList();
+      Cache.Friends = Cache.Friends.where((element) => !((element.UserID == friend.UserID && element.FriendUserID == friend.FriendUserID)||(element.UserID == friend.FriendUserID && element.FriendUserID == friend.UserID))).toList();
     }
     var data = json.decode(response.body);
     var result = data;
@@ -303,6 +302,24 @@ class SocialNetworkRepository{
     }
     var data = json.decode(response.body);
     var result = data;
+
+    return result;
+  }
+
+  Future<bool> AddMessage(String conversationId, String messageContent) async {
+    String endpoint = _endpointPaths['AddMessage'];
+    var uri = Uri.https(_serviceUrl, endpoint);
+    print(uri);
+    var message = new Message(MessageID: conversationId, ConversationID: conversationId, Sender: Cache.LoggedUser.UserID, MessageContent: messageContent, SendDate: DateTime.now());
+    //encode Map to JSON
+    var body = json.encode(message.toJson(),toEncodable: myEncode);
+    final response = await http.post(uri,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+    print(response);
+    print(response.body);
+    var result = json.decode(response.body);
 
     return result;
   }

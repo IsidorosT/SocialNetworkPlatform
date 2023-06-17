@@ -20,7 +20,7 @@ class MainScreen extends StatefulWidget {
   MainScreen(this.SelectedTab){
     TabViews = [
       HomeTab(
-          Cache.Posts
+        Cache.Posts
       ),
       MessageTab(
           Cache.Conversations
@@ -40,7 +40,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
   int SelectedTab;
   TabController _tabController;
   _MainScreenState(this.SelectedTab,this.TabViews){
-    Cache.MainScreenState = this;
     Cache.TabViews = TabViews;
   }
   @override
@@ -82,129 +81,133 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => new ConversationBloc(Cache.Conversations),
-      child: Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text("Social"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MaterialApp(
-                        home: LoginScreen())),
-                  );
-                },
-                icon: const Icon(
-                    Icons.logout
-                )
-            )
-          ],
-          bottom: TabBar(
-              controller: _tabController,
-              tabs: Tabs
-          ),
-        ),
-        body: TabBarView(
-            controller: _tabController,
-            children: TabViews
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MaterialApp(
-                    home: Scaffold(
-                      body: Column(
-                        children: [
-                          Text("Add new Post"),
-                          Row(
-                            children: [
-                              Text("Photo"),
-                              SizedBox(
-                                width: 200,
-                                height: 60,
-                                child: TextField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Web destination of the photo',
-                                    ),
-                                    onChanged: (newValue){
-                                      newPost.PostPicUrl = newValue;
-                                    }
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Description"),
-                              SizedBox(
-                                width: 200,
-                                height: 60,
-                                child: TextField(
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Enter your post Description',
-                                    ),
-                                    onChanged: (newValue){
-                                      newPost.Description = newValue;
-                                    }
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                child: const Text('Create'),
-                                onPressed: () async {
-                                  newPost.UserID = Cache.LoggedUser.UserID;
-                                  newPost.PostID = Guid.newGuid.toString();
-                                  newPost.PostID = await Singleton.socialNetworkRepo.AddPost(newPost);
-                                  setState(() {
-                                    Cache.Posts.add(newPost);
-                                    TabViews = [
-                                      HomeTab(
-                                          Cache.Posts
-                                      ),
-                                      MessageTab(
-                                          Cache.Conversations
-                                      ),
-                                      const NotificationsTab(),
-                                      SearchTab(
-                                          Cache.Users
-                                      )
-                                    ];
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                child: const Text('Discard'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+      create: (BuildContext context) => Cache.conversationBloc,
+      child: BlocProvider(
+        create: (BuildContext context) => Cache.messageBloc,
+        child: Scaffold(
+          appBar: AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Text("Social"),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Cache.Clear();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MaterialApp(
+                          home: LoginScreen())),
+                    );
+                  },
+                  icon: const Icon(
+                      Icons.logout
                   )
-              ),
-            );
-          },
-          child: const Icon(Icons.add),
+              )
+            ],
+            bottom: TabBar(
+                controller: _tabController,
+                tabs: Tabs
+            ),
+          ),
+          body: TabBarView(
+              controller: _tabController,
+              children: TabViews
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MaterialApp(
+                      home: Scaffold(
+                        body: Column(
+                          children: [
+                            Text("Add new Post"),
+                            Row(
+                              children: [
+                                Text("Photo"),
+                                SizedBox(
+                                  width: 200,
+                                  height: 60,
+                                  child: TextField(
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Web destination of the photo',
+                                      ),
+                                      onChanged: (newValue){
+                                        newPost.PostPicUrl = newValue;
+                                      }
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("Description"),
+                                SizedBox(
+                                  width: 200,
+                                  height: 60,
+                                  child: TextField(
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Enter your post Description',
+                                      ),
+                                      onChanged: (newValue){
+                                        newPost.Description = newValue;
+                                      }
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  child: const Text('Create'),
+                                  onPressed: () async {
+                                    newPost.UserID = Cache.LoggedUser.UserID;
+                                    newPost.PostID = Guid.newGuid.toString();
+                                    newPost.PostID = await Singleton.socialNetworkRepo.AddPost(newPost);
+                                    setState(() {
+                                      Cache.Posts.add(newPost);
+                                      TabViews = [
+                                        HomeTab(
+                                            Cache.Posts
+                                        ),
+                                        MessageTab(
+                                            Cache.Conversations
+                                        ),
+                                        const NotificationsTab(),
+                                        SearchTab(
+                                            Cache.Users
+                                        )
+                                      ];
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  child: const Text('Discard'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
     );

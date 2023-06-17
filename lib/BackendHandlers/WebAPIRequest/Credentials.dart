@@ -1,8 +1,9 @@
 class Credentials{
   String SessionKey;
   String UserID;
-  Credentials(this.SessionKey,this.UserID){
-
+  Credentials(sessionKey,userID){
+    SessionKey = sessionKey;
+    UserID = userID;
   }
   Map toJson() => {
     'SessionKey': SessionKey,

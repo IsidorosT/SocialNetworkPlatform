@@ -3,9 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:socialnetworkplatform/BackendHandlers/IncrementalDataProvider.dart';
 import 'package:socialnetworkplatform/Models/Conversation.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
 import '../Cache.dart';
+import 'Blocs/ConversationsBloc.dart';
+import 'Blocs/MessageBloc.dart';
 import 'RegisterScreen.dart';
 import 'MainScreen.dart';
 import '../Models/UserSQL.dart';
@@ -121,6 +124,7 @@ class LoginScreen extends StatelessWidget {
                             if(response.Success){
                               Cache.LoggedUser = response.LoggedUser,
                               Cache.Session = response.Session,
+                              print(Cache.Session + "_" + Cache.LoggedUser.UserID),
                               await GetUserData(),
                               Navigator.push(
                                 context,
@@ -171,7 +175,7 @@ class LoginScreen extends StatelessWidget {
             )
         );
   }
-  void GetUserData() async {
+  Future GetUserData() async {
       var response = await Singleton.socialNetworkRepo.GetDataForUser(Cache.Session,Cache.LoggedUser.UserID,true,true,true,true,true,true);
       print(Cache);
       Cache.Users = response.Users;
@@ -180,6 +184,10 @@ class LoginScreen extends StatelessWidget {
       Cache.Likes = response.Likes;
       Cache.Conversations = response.Conversations;
       Cache.Messages = response.Messages;
+      Cache.conversationBloc = new ConversationBloc(response.Conversations);
+      Cache.messageBloc = new MessageBloc(response.Messages);
+      print("Initializing Updater...");
+      IncrementalDataProvider.InitializeUpdater();
   }
 }
 
