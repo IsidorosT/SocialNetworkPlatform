@@ -35,6 +35,7 @@ class SocialNetworkRepository{
     'AddConversation':'/conversations/add',
     'RemoveConversation':'/conversations/delete',
     'AddMessage':'/messages/add',
+    'ReadConversation': '/conversations/read'
   };
   String _serviceUrl;
   SocialNetworkRepository(String url){
@@ -314,6 +315,23 @@ class SocialNetworkRepository{
     //encode Map to JSON
     var body = json.encode(message.toJson(),toEncodable: myEncode);
     final response = await http.post(uri,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+    print(response);
+    print(response.body);
+    var result = json.decode(response.body);
+
+    return result;
+  }
+
+  Future<bool> ReadConversation(String conversationId) async {
+    String endpoint = _endpointPaths['ReadConversation'];
+    var uri = Uri.https(_serviceUrl, endpoint);
+    print(uri);
+    //encode Map to JSON
+    var body = json.encode(conversationId,toEncodable: myEncode);
+    final response = await http.patch(uri,
         headers: {"Content-Type": "application/json"},
         body: body
     );

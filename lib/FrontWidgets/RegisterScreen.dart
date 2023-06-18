@@ -32,7 +32,7 @@ class RegisterScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Social"),
+                  Text("Connect", style: Theme.of(context).textTheme.headline1),
                 ],
               ),
               SizedBox(

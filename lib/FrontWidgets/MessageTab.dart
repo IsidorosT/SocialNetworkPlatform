@@ -13,22 +13,25 @@ class MessageTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    conversationBloc = BlocProvider.of<ConversationBloc>(context);
     return BlocBuilder<ConversationBloc, List<Conversation>>(
-        bloc: conversationBloc,
         builder: (context, state) {
           return SingleChildScrollView(
             child: Column(
               children: [
+                state.length > 0 ?
                 ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: Conversations.length,
+                  itemCount: state.length,
                   itemBuilder: (context, index) {
-                    var result = Conversations[index];
+                    var result = state[index];
                     return MessageComponent(result);
                   },
                 )
+                    :
+                    Text(
+                      "You have no active conversations yet!"
+                    )
               ],
             ),
           );

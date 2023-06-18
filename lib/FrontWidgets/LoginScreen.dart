@@ -4,11 +4,13 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socialnetworkplatform/BackendHandlers/IncrementalDataProvider.dart';
+import 'package:socialnetworkplatform/FrontWidgets/Blocs/UserBloc.dart';
 import 'package:socialnetworkplatform/Models/Conversation.dart';
 import 'package:socialnetworkplatform/Models/Post.dart';
 import '../Cache.dart';
 import 'Blocs/ConversationsBloc.dart';
 import 'Blocs/MessageBloc.dart';
+import 'Blocs/PostBloc.dart';
 import 'RegisterScreen.dart';
 import 'MainScreen.dart';
 import '../Models/UserSQL.dart';
@@ -31,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Social"),
+                      Text("Connect", style: Theme.of(context).textTheme.headline1),
                     ],
                   ),
                   SizedBox(
@@ -186,6 +188,8 @@ class LoginScreen extends StatelessWidget {
       Cache.Messages = response.Messages;
       Cache.conversationBloc = new ConversationBloc(response.Conversations);
       Cache.messageBloc = new MessageBloc(response.Messages);
+      Cache.userBloc = new UserBloc(new UserState(response.Users, response.Friends));
+      Cache.postBloc = new PostBloc(new PostState(response.Posts,response.Likes));
       print("Initializing Updater...");
       IncrementalDataProvider.InitializeUpdater();
   }

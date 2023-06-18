@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:socialnetworkplatform/Singleton.dart';
 
 import '../../Cache.dart';
 import '../../Models/Conversation.dart';
@@ -11,9 +12,12 @@ import 'ConversationComponent.dart';
 class MessageComponent extends StatelessWidget {
   Conversation Chat;
   String LastMessage;
+  String LastMessageUser;
   MessageComponent(Conversation chat){
     Chat = chat;
     messagesEx = Cache.Messages.where((x) => x.ConversationID == Chat.ConversationID).toList();
+    messagesEx.sort((a,b) => a.SendDate.compareTo(b.SendDate));
+    LastMessageUser = messagesEx.length > 0 ? messagesEx.elementAt(messagesEx.length-1).Sender : "";
     LastMessage = messagesEx.length > 0 ? messagesEx.elementAt(messagesEx.length-1).MessageContent : "";
   }
 
@@ -21,15 +25,17 @@ class MessageComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>{
-        Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MaterialApp(
-              home: ConversationComponent(Chat,messagesEx)
-            )
-        ),
-        )
+      onTap: () async =>{
+        if(await Singleton.socialNetworkRepo.ReadConversation(Chat.ConversationID)){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MaterialApp(
+                    home: ConversationComponent(Chat,messagesEx)
+                )
+            ),
+          )
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -53,7 +59,7 @@ class MessageComponent extends StatelessWidget {
                   CircleAvatar(
                     radius: 16,
                     backgroundImage: NetworkImage(
-                        Cache.Users.where((x) => (x.UserID == Chat.UserIDB || x.UserID == Chat.UserIDB) && x.UserID != Cache.LoggedUser.UserID).elementAt(0).ProfilePicUrl
+                        Cache.Users.where((x) => (x.UserID == Chat.UserIDB || x.UserID == Chat.UserIDA) && x.UserID != Cache.LoggedUser.UserID).elementAt(0).ProfilePicUrl
                     ),
                   ),
                   Container(
@@ -74,7 +80,7 @@ class MessageComponent extends StatelessWidget {
                                     text: LastMessage.length <= 20 ? LastMessage : LastMessage.substring(0,20)+"...",
                                     style: TextStyle(
                                       color: Colors.black,
-                                    fontWeight: Chat.isUnread ? FontWeight.bold : FontWeight.normal,
+                                    fontWeight: Chat.isUnread && LastMessageUser != Cache.LoggedUser.UserID? FontWeight.bold : FontWeight.normal,
                                     )
                                   )
 
