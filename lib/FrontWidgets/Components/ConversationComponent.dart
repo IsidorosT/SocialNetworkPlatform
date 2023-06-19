@@ -65,6 +65,7 @@ class ConversationComponent extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SingleChildScrollView(
+                          reverse: true,
                           controller: _controller,
                           child: Column(
                             children: [
@@ -93,22 +94,6 @@ class ConversationComponent extends StatelessWidget {
                         color: Colors.white,
                         child: Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  right: BorderSide(
-                                    width: 2,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Icon(
-                                  CupertinoIcons.camera_fill,
-                                ),
-                              ),
-                            ),
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
@@ -116,7 +101,6 @@ class ConversationComponent extends StatelessWidget {
                                   controller: textFieldController,
                                   onChanged: (val) {
                                     MessageContent = val;
-                                    _controller.jumpTo(_controller.position.maxScrollExtent);
                                   },
                                   style: const TextStyle(fontSize: 14),
                                   decoration: const InputDecoration(
@@ -140,7 +124,6 @@ class ConversationComponent extends StatelessWidget {
                                   await Singleton.socialNetworkRepo.AddMessage(Chat.ConversationID,MessageContent),
                                   MessageContent = "",
                                   textFieldController.text = "",
-                                  _controller.jumpTo(_controller.position.maxScrollExtent),
                                 },
                               ),
                             ),

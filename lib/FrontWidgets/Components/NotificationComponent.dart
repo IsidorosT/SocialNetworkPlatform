@@ -52,6 +52,7 @@ class NotificationComponent extends StatelessWidget {
                                         text: _notificationData.GetNotificationString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          color: Colors.black
                                         )
                                     )
 

@@ -71,7 +71,7 @@ class IncrementalDataProvider{
   static void SendNotification(NotificationType type,String userID){
     var notification = new NotificationData(userID,type,DateTime.now());
     //Show popup
-    if(userID == Cache.LoggedUser.UserID){
+    if(userID == Cache.LoggedUser.UserID || userID == ""){
       return;
     }
     CherryToast.info(
@@ -112,7 +112,13 @@ class IncrementalDataProvider{
   }
   static String GetLikeRequester(List<Like> newLikes, List<Like> oldLikes){
     if(newLikes.length > oldLikes.length){
-      return newLikes.where((x) => !oldLikes.any((y) => y.PostID == x.PostID && y.UserID == x.UserID)).elementAt(0).UserID;
+      var like = newLikes.where((x) => !oldLikes.any((y) => y.PostID == x.PostID && y.UserID == x.UserID)).elementAt(0);
+      if(Cache.Posts.where((x) => x.PostID == like.PostID).elementAt(0).UserID != Cache.LoggedUser.UserID){
+        return "";
+      }
+      else {
+        return like.UserID;
+      }
     }
     else{
       return "";
