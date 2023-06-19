@@ -137,13 +137,9 @@ class PostComponent extends StatelessWidget {
                         like.PostID = PostDetails.PostID;
                         if(Likes.any((i) => i.UserID == Cache.LoggedUser.UserID)){
                           Singleton.socialNetworkRepo.RemoveLike(like);
-                          Likes = Likes.where((i) => i.UserID != Cache.LoggedUser.UserID).toList();
-                          Cache.Likes = Cache.Likes.where((x) => x.UserID != like.UserID && x.PostID != like.PostID);
                         }
                         else{
                           Singleton.socialNetworkRepo.AddLike(like);
-                          Likes.add(like);
-                          Cache.Likes.add(like);
                         }
                         Cache.postBloc.add(new PostEvent(Cache.Posts,Cache.Likes));
                     },

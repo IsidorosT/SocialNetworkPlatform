@@ -10,7 +10,9 @@ import 'package:socialnetworkplatform/Models/Post.dart';
 import '../Cache.dart';
 import 'Blocs/ConversationsBloc.dart';
 import 'Blocs/MessageBloc.dart';
+import 'Blocs/NotificationBloc.dart';
 import 'Blocs/PostBloc.dart';
+import 'NotificationData.dart';
 import 'RegisterScreen.dart';
 import 'MainScreen.dart';
 import '../Models/UserSQL.dart';
@@ -186,10 +188,12 @@ class LoginScreen extends StatelessWidget {
       Cache.Likes = response.Likes;
       Cache.Conversations = response.Conversations;
       Cache.Messages = response.Messages;
+      Cache.Notifications = [];
       Cache.conversationBloc = new ConversationBloc(response.Conversations);
       Cache.messageBloc = new MessageBloc(response.Messages);
       Cache.userBloc = new UserBloc(new UserState(response.Users, response.Friends));
       Cache.postBloc = new PostBloc(new PostState(response.Posts,response.Likes));
+      Cache.notificationBloc = new NotificationBloc([]);
       print("Initializing Updater...");
       IncrementalDataProvider.InitializeUpdater();
   }

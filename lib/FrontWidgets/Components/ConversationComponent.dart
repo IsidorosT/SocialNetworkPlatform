@@ -79,7 +79,7 @@ class ConversationComponent extends StatelessWidget {
                                       ? MessageOwnTile( MessageContent: result.MessageContent, MessageDate: result.SendDate.toString())
                                       : MessageTile(MessageContent: result.MessageContent, MessageDate: result.SendDate.toString());
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -116,6 +116,7 @@ class ConversationComponent extends StatelessWidget {
                                   controller: textFieldController,
                                   onChanged: (val) {
                                     MessageContent = val;
+                                    _controller.jumpTo(_controller.position.maxScrollExtent);
                                   },
                                   style: const TextStyle(fontSize: 14),
                                   decoration: const InputDecoration(
@@ -139,6 +140,7 @@ class ConversationComponent extends StatelessWidget {
                                   await Singleton.socialNetworkRepo.AddMessage(Chat.ConversationID,MessageContent),
                                   MessageContent = "",
                                   textFieldController.text = "",
+                                  _controller.jumpTo(_controller.position.maxScrollExtent),
                                 },
                               ),
                             ),

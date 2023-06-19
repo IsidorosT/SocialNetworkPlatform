@@ -69,7 +69,7 @@ class ProfileComponent extends StatelessWidget {
                         )
                     ),
                     Icon(
-                        Cache.Friends.any((element) => element.UserID == Cache.LoggedUser.UserID && element.FriendUserID == SelectedUser.UserID)
+                        Cache.Friends.any((element) => (element.UserID == Cache.LoggedUser.UserID && element.FriendUserID == SelectedUser.UserID) || (element.UserID == SelectedUser.UserID && element.FriendUserID == Cache.LoggedUser.UserID))
                             ? Icons.person
                             : Icons.add
                     )

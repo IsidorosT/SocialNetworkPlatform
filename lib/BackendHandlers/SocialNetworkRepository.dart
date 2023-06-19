@@ -233,7 +233,6 @@ class SocialNetworkRepository{
       );
 
       var data = json.decode(response.body);
-      print(data);
       var result = new MemoryResponse.fromJson(data);
 
       return result;

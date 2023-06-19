@@ -7,20 +7,32 @@ import '../Models/UserSQL.dart';
 import 'Blocs/UserBloc.dart';
 import 'Components/ProfileComponent.dart';
 
-class SearchTab extends StatefulWidget {
+class SearchTab extends StatelessWidget {
+  SearchTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc,UserState>(
+        builder: (context, state) {
+          return SearchBar(state.Users);
+    });
+  }
+}
+
+class SearchBar extends StatefulWidget {
   List<UserSQL> Users;
-  SearchTab(List<UserSQL> users){
+  SearchBar(List<UserSQL> users){
     Users = users;
   }
 
   @override
-  State<SearchTab> createState() => _searchTabState(Users);
+  State<SearchBar> createState() => _searchBarState(Users);
 }
 
-class _searchTabState extends State<SearchTab> {
+class _searchBarState extends State<SearchBar> {
   List<UserSQL> Users;
   List<UserSQL> SearchableUsers;
-  _searchTabState(List<UserSQL> users){
+  _searchBarState(List<UserSQL> users){
     Users = users;
   }
 

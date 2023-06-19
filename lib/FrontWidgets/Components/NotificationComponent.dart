@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../Cache.dart';
+import '../NotificationData.dart';
 class NotificationComponent extends StatelessWidget {
-  const NotificationComponent();
+  NotificationData _notificationData;
+  NotificationComponent(this._notificationData);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class NotificationComponent extends StatelessWidget {
                     CircleAvatar(
                       radius: 16,
                       backgroundImage: NetworkImage(
-                          "https://i0.wp.com/newspack-washingtoncitypaper.s3.amazonaws.com/uploads/2009/04/contexts.org_socimages_files_2009_04_d_silhouette.png?fit=1200%2C756&ssl=1"
+                          Cache.Users.where((x) => x.UserID == _notificationData.UserID).elementAt(0).ProfilePicUrl
                       ),
                     ),
                     Container(
@@ -45,7 +49,7 @@ class NotificationComponent extends StatelessWidget {
                                     overflow: TextOverflow.fade,
                                     strutStyle: StrutStyle(fontSize: 12.0),
                                     text: TextSpan(
-                                        text: "last message",
+                                        text: _notificationData.GetNotificationString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         )

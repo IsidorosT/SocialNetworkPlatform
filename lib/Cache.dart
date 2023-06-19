@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:socialnetworkplatform/FrontWidgets/NotificationData.dart';
 import 'package:socialnetworkplatform/Models/Conversation.dart';
 
 import 'FrontWidgets/Blocs/ConversationsBloc.dart';
 import 'FrontWidgets/Blocs/MessageBloc.dart';
+import 'FrontWidgets/Blocs/NotificationBloc.dart';
 import 'FrontWidgets/Blocs/PostBloc.dart';
 import 'FrontWidgets/Blocs/UserBloc.dart';
 import 'FrontWidgets/MainScreen.dart';
@@ -22,6 +24,7 @@ class Cache{
   static List<Like> Likes;
   static List<Conversation> Conversations;
   static List<Message> Messages;
+  static List<NotificationData> Notifications;
   static String Session;
 
   static State<MainScreen> MainScreenState;
@@ -30,9 +33,11 @@ class Cache{
   static MessageBloc messageBloc;
   static UserBloc userBloc;
   static PostBloc postBloc;
+  static NotificationBloc notificationBloc;
 
   static List<Widget> TabViews;
   static Timer timer;
+  static BuildContext context;
 
   static void Clear(){
     LoggedUser = null;
@@ -48,7 +53,9 @@ class Cache{
     messageBloc = null;
     userBloc = null;
     postBloc = null;
+    notificationBloc = null;
     TabViews = null;
+    context = null;
     timer.cancel();
   }
 }
