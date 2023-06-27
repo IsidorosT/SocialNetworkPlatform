@@ -69,6 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 const SizedBox(height: 20),
+                Text(User.Bio),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
